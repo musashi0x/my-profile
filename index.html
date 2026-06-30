@@ -1,355 +1,729 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Z3ro - Fullstack Developer</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-    <style>
-        /* Custom styles */
-        body {
-            font-family: 'Press Start 2P', cursive;
-            background-color: #1a1a2e; /* Dark blue-purple background */
-            color: #e0e0e0; /* Light grey text */
-            overflow-x: hidden; /* Prevent horizontal scroll */
-        }
-        .pixel-border {
-            border: 4px solid #000;
-            box-shadow: 4px 4px 0px #000; /* Pixelated shadow effect */
-            image-rendering: pixelated; /* Ensures images look pixelated if they are scaled */
-        }
-        .pixel-border-inset {
-            border: 4px solid #000;
-            box-shadow: inset 2px 2px 0px #0f0f1a, inset -2px -2px 0px #0f0f1a; /* Inset shadow for depth */
-        }
-        .pixel-button {
-            background-color: #4a4a7f; /* Button color */
-            color: #fff;
-            padding: 8px 12px;
-            text-decoration: none;
-            border: 3px solid #000;
-            box-shadow: 3px 3px 0px #000;
-            transition: all 0.1s ease-in-out;
-            display: inline-block; /* Ensure proper spacing and shadow */
-            word-break: break-word;
-            min-width: 0; /* Allow buttons to shrink */
-        }
-        .pixel-button:hover {
-            background-color: #6a6a9f; /* Lighter button color on hover */
-            box-shadow: 1px 1px 0px #000;
-            transform: translate(2px, 2px);
-        }
-        .pixel-button:active {
-            background-color: #3a3a6f; /* Darker button color on active */
-            box-shadow: none;
-            transform: translate(3px, 3px);
-        }
-        .section-title {
-            font-size: 1.5rem; /* 24px */
-            color: #ffcb2b; /* Yellowish accent for titles */
-            margin-bottom: 1rem;
-            text-shadow: 2px 2px #000;
-        }
-        .skill-category-title {
-            font-size: 1.1rem; /* Slightly smaller for skill categories */
-            color: #7fdbff; /* Light blue for category titles */
-            margin-top: 0.8rem;
-            margin-bottom: 0.5rem;
-            text-shadow: 1px 1px #000;
-        }
-        .skill-item {
-            background-color: rgba(0,0,0,0.2);
-            padding: 6px 10px;
-            margin: 4px;
-            border: 2px solid #000;
-            display: inline-block;
-            font-size: 0.8rem; /* Smaller font for skill items */
-            color: #f0f0f0;
-        }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Musashi · Trinh Ngoc Minh — Fullstack & Blockchain Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root { --ink: #0F172A; --paper: #FAFAFC; --aka: #1D4ED8; --soft: #475569; }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; }
+  ::selection { background: rgba(29,78,216,0.22); }
+  a { color: inherit; text-decoration: none; }
 
-        /* Blinking cursor effect for the name */
-        .blinking-cursor::after {
-            content: '_';
-            animation: blink 1s step-start infinite;
-        }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes inkIn { from { opacity: 0; transform: translateY(8px); filter: blur(6px); } to { opacity: 1; transform: translateY(0); filter: blur(0); } }
+  @keyframes drawEnso { from { transform: rotate(-130deg) scale(0.9); opacity: 0; } to { transform: rotate(-18deg) scale(1); opacity: 0.9; } }
+  @keyframes sealIn { 0% { transform: scale(1.5) rotate(-12deg); opacity: 0; } 60% { transform: scale(0.92) rotate(-12deg); opacity: 1; } 100% { transform: scale(1) rotate(-12deg); opacity: 1; } }
 
-        @keyframes blink {
-            50% {
-                opacity: 0;
-            }
-        }
+  /* hover behaviours (compiled from style-hover) */
+  .nav-link { transition: color .2s; }
+  .nav-link:hover { color: var(--aka); }
+  .nav-cta { transition: all .2s; }
+  .nav-cta:hover { background: var(--aka); color: #FFFFFF; }
+  .btn-primary { transition: transform .2s; }
+  .btn-primary:hover { transform: translateY(-2px); }
+  .btn-ghost { transition: all .2s; }
+  .btn-ghost:hover { border-color: var(--aka); color: var(--aka); }
+  .skill-card { transition: border-color .25s, transform .25s, background .25s; }
+  .skill-card:hover { border-color: var(--aka); transform: translateY(-3px); background: rgba(255,255,255,0.55); }
+  .side-card { transition: border-color .25s, transform .25s; }
+  .side-card:hover { border-color: var(--aka); transform: translateY(-3px); }
 
-        /* Simple modal style */
-        .modal {
-            display: none; /* Hidden by default */
-            position: fixed;
-            z-index: 100;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.6); /* Dim background */
-            align-items: center;
-            justify-content: center;
-        }
-        .modal-content {
-            background-color: #1a1a2e; /* Match body background */
-            margin: auto;
-            padding: 20px;
-            border: 4px solid #000;
-            box-shadow: 6px 6px 0px #000;
-            width: 80%;
-            max-width: 500px;
-            text-align: center;
-            position: relative; /* For close button positioning */
-        }
-        .modal-close-button {
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            color: #ffcb2b;
-            font-size: 24px; /* Larger close button */
-            font-weight: bold;
-            cursor: pointer;
-        }
-        .modal-close-button:hover {
-            color: #fff;
-        }
+  /* reveal */
+  [data-reveal] { opacity: 0; }
 
-        /* Custom scrollbar for a more retro feel - Webkit only */
-        ::-webkit-scrollbar {
-            width: 12px;
-            height: 12px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #0f0f1a; /* Darker track */
-            border: 2px solid #000;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #4a4a7f; /* Scrollbar thumb color */
-            border: 2px solid #000;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #6a6a9f;
-        }
-        ::-webkit-scrollbar-corner {
-            background: #0f0f1a;
-        }
-
-        /* Mobile responsive adjustments */
-        @media (max-width: 768px) {
-            .section-title {
-                font-size: 1.2rem;
-            }
-            .skill-category-title {
-                font-size: 1rem;
-            }
-            .skill-item {
-                font-size: 0.7rem;
-                padding: 4px 8px;
-                margin: 2px;
-            }
-            .pixel-button {
-                padding: 6px 10px;
-                font-size: 0.75rem;
-            }
-            body {
-                line-height: 1.4;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .container {
-                padding-left: 0.5rem;
-                padding-right: 0.5rem;
-            }
-            .section-title {
-                font-size: 1rem;
-            }
-            .skill-item {
-                font-size: 0.6rem;
-                padding: 3px 6px;
-            }
-        }
-
-    </style>
+  @media (max-width: 880px) {
+    nav { padding: 14px 20px !important; }
+    nav .nav-links { gap: 16px !important; flex-wrap: wrap; }
+    header { grid-template-columns: 1fr !important; padding: 48px 20px !important; }
+    section { padding-left: 20px !important; padding-right: 20px !important; }
+    .stat-grid { grid-template-columns: repeat(2, 1fr) !important; }
+    .skills-grid, .suimail-feats { grid-template-columns: 1fr !important; }
+    .side-grid { grid-template-columns: 1fr !important; }
+    .exp-row { grid-template-columns: 1fr !important; gap: 12px !important; }
+    .hack-grid { grid-template-columns: 1fr !important; }
+  }
+</style>
 </head>
-<body class="antialiased leading-normal tracking-wider">
+<body>
+<div style="--ink: #0F172A; --paper: #FAFAFC; --aka: #1D4ED8; --soft: #475569; position: relative; min-height: 100vh; background: var(--paper); color: var(--ink); font-family: 'Zen Kaku Gothic New', sans-serif; overflow-x: hidden;">
 
-    <header class="p-2 md:p-6 fixed top-0 left-0 right-0 z-50 bg-opacity-80 backdrop-blur-md" style="background-color: rgba(26, 26, 46, 0.8);">
-        <div class="container mx-auto flex justify-between items-center pixel-border-inset p-2 md:p-3">
-            <div class="text-sm md:text-xl font-bold text-white truncate">Z3ro_O102</div>
-            <nav class="text-xs md:text-sm flex-shrink-0">
-                <a href="#about" class="pixel-button mr-1 md:mr-2 px-2 md:px-3">About</a>
-                <a href="#skills" class="pixel-button mr-1 md:mr-2 px-2 md:px-3">Skills</a>
-                <a href="#contact" class="pixel-button px-2 md:px-3">Contact</a>
-            </nav>
-        </div>
-    </header>
+  <!-- paper + atmosphere -->
+  <div style="position: fixed; inset: 0; pointer-events: none; z-index: 0; background:
+      radial-gradient(120% 80% at 80% 0%, rgba(255,255,255,0.5), transparent 55%),
+      radial-gradient(100% 70% at 0% 100%, rgba(29,78,216,0.05), transparent 50%);"></div>
+  <div style="position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: 0.04; mix-blend-mode: multiply;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22120%22 height=%22120%22><filter id=%22n%22><feTurbulence type=%22fractalNoise%22 baseFrequency=%220.9%22 numOctaves=%222%22/></filter><rect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23n)%22/></svg>');"></div>
+  <!-- giant kanji watermark -->
+  <div id="giant-watermark" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%); z-index: 0; pointer-events: none; font-family: 'Shippori Mincho', serif; font-weight: 800; font-size: 64vh; line-height: 1; color: rgba(15,23,42,0.035); opacity: 1;">武</div>
 
-    <div class="container mx-auto mt-24 md:mt-32 p-4 md:p-6">
+  <!-- NAV -->
+  <nav style="position: sticky; top: 0; z-index: 50; display: flex; align-items: center; justify-content: space-between; padding: 16px 44px; backdrop-filter: blur(8px); background: rgba(250,250,252,0.72); border-bottom: 1px solid rgba(15,23,42,0.1);">
+    <div id="scroll-progress" style="position: absolute; bottom: -1px; left: 0; height: 2px; width: 100%; background: var(--aka); transform-origin: left; transform: scaleX(0); z-index: 51;"></div>
+    <a href="#top" style="display: flex; align-items: center; gap: 11px;">
+      <span style="display: inline-flex; width: 30px; height: 30px; align-items: center; justify-content: center; background: var(--aka); color: #FFFFFF; border-radius: 6px; font-family: 'Shippori Mincho', serif; font-weight: 700; font-size: 17px;">武</span>
+      <span style="font-family: 'Shippori Mincho', serif; font-weight: 600; font-size: 16px; letter-spacing: 0.04em;">Musashi</span>
+    </a>
+    <div class="nav-links" style="display: flex; align-items: center; gap: 30px; font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--soft);">
+      <a class="nav-link" href="#earth">地 earth</a>
+      <a class="nav-link" href="#water">水 water</a>
+      <a class="nav-link" href="#fire">火 fire</a>
+      <a class="nav-link" href="#wind">風 wind</a>
+      <a class="nav-cta" href="https://drive.google.com/file/d/1B3X0ynH3uT3GhAbRmJG_NcibmOmQ5XUz/view" target="_blank" style="padding: 8px 16px; border: 1px solid var(--aka); color: var(--aka); border-radius: 7px;">巻物 resume</a>
+    </div>
+  </nav>
 
-        <section id="hero" class="text-center mb-12 md:mb-16 pt-8 md:pt-12">
-            <div class="inline-block p-4 md:p-6 pixel-border bg-gray-800 bg-opacity-50">
-                <h1 class="text-4xl md:text-6xl font-bold text-white mb-2">
-                    Hi everyone, Call Me <span class="text-yellow-400 blinking-cursor">Z3ro</span>
-                </h1>
-                <h3 class="text-lg md:text-2xl text-cyan-400">A passionate fullstack developer from VietNam</h3>
-            </div>
-            <div class="mt-4">
-                <img src="https://komarev.com/ghpvc/?username=zerotoh3ro&label=Profile%20Views&color=0e75b6&style=flat" alt="Profile Views" class="mx-auto pixel-border" onerror="this.style.display='none'"/>
-            </div>
-        </section>
-
-        <section id="about" class="mb-12 md:mb-16 p-4 md:p-6 pixel-border bg-gray-800 bg-opacity-30">
-            <h2 class="section-title text-center md:text-left">About Me</h2>
-            <div class="grid md:grid-cols-2 gap-4 md:gap-6 text-sm md:text-base">
-                <div class="pixel-border-inset p-3 md:p-4">
-                    <p class="mb-2"><span class="text-green-400">🌱 Currently Learning:</span> BootDev, BlockChain, Web3 and more...</p>
-                    <p><span class="text-green-400">Always hungry for knowledge!</span></p>
-                </div>
-                <div class="pixel-border-inset p-3 md:p-4">
-                    <p class="mb-2"><span class="text-blue-400">👯 Looking to Collaborate:</span> Open to exciting projects! Find me on <a href="https://x.com/Z3ro_0102" target="_blank" rel="noopener noreferrer" class="pixel-button !p-1 !text-xs">X (Twitter)</a></p>
-                </div>
-                <div class="md:col-span-2 pixel-border-inset p-3 md:p-4">
-                     <p><span class="text-purple-400">⚡ Quote:</span> "The only way to do great work is to love what you do." - Steve Jobs</p>
-                </div>
-            </div>
-        </section>
-
-        <section id="skills" class="mb-12 md:mb-16 p-4 md:p-6 pixel-border bg-gray-800 bg-opacity-30">
-            <h2 class="section-title text-center md:text-left">My Skills</h2>
-            <div class="pixel-border-inset p-3 md:p-4 mb-4">
-                <p class="mb-2 text-sm md:text-base"><span class="text-yellow-400">💬 Ask me about:</span> C#, C++, <strong class="text-green-300">JavaScript, TypeScript</strong></p>
-            </div>
-
-            <div>
-                <h3 class="skill-category-title">Fullstack Development</h3>
-                <div class="flex flex-wrap justify-center md:justify-start">
-                    <span class="skill-item">NestJS</span>
-                    <span class="skill-item">ReactJS</span>
-                    <span class="skill-item">TypeScript</span>
-                    <span class="skill-item">JavaScript</span>
-                    <span class="skill-item">PostgreSQL</span>
-                    <span class="skill-item">MySQL</span>
-                    <span class="skill-item">Linux</span>
-                    <span class="skill-item">Docker</span>
-                    </div>
-            </div>
-
-            <div class="mt-6">
-                <h3 class="skill-category-title">Blockchain Development</h3>
-                <div class="flex flex-wrap justify-center md:justify-start">
-                    <span class="skill-item">Solidity</span>
-                    <span class="skill-item">Move</span>
-                    <span class="skill-item">Rust</span>
-                    <span class="skill-item">Hardhat</span>
-                    <span class="skill-item">Truffle</span>
-                    <span class="skill-item">Smart Contracts</span>
-                    <span class="skill-item">DeFi</span>
-                    <span class="skill-item">Mini App</span>
-                    <span class="skill-item">NFT</span>
-                    <span class="skill-item">Bot Trading</span>
-                </div>
-            </div>
-        </section>
-
-        <section id="contact" class="p-4 md:p-6 pixel-border bg-gray-800 bg-opacity-30">
-            <h2 class="section-title text-center md:text-left">Connect & Contact</h2>
-            <div class="text-center md:text-left text-sm md:text-base">
-                <div class="mb-4">
-                    <p class="mb-2"><span class="text-red-400">📫 How to reach me:</span></p>
-                    <a href="#" id="emailLink" class="pixel-button !bg-red-500 hover:!bg-red-600 active:!bg-red-700 break-all text-xs md:text-sm inline-block max-w-full">franziska.bohmer814@emailhub.kr</a>
-                </div>
-                <div>
-                    <p class="mb-2">Connect with me on social media:</p>
-                    <div class="flex flex-col sm:flex-row justify-center md:justify-start items-center gap-2">
-                        <a href="https://twitter.com/mtblaser" target="_blank" rel="noopener noreferrer" class="pixel-button !bg-blue-500 hover:!bg-blue-600 active:!bg-blue-700 w-full sm:w-auto text-center">
-                            <img src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/twitter.svg" alt="Twitter" class="inline-block h-4 md:h-5 w-auto mr-1 -translate-y-0.5" style="image-rendering: pixelated;"/> Twitter
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
+  <!-- HERO -->
+  <header id="top" style="position: relative; z-index: 1; max-width: 1180px; margin: 0 auto; padding: 70px 44px 60px; display: grid; grid-template-columns: 1.25fr 0.75fr; gap: 40px; align-items: center;">
+    <div>
+      <div class="hero-reveal" style="opacity: 0; font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; letter-spacing: 0.22em; color: var(--aka);">兵法者 · THE WAY OF THE BUILDER</div>
+      <div class="hero-reveal hero-ink" style="opacity: 0; font-family: 'Shippori Mincho', serif; font-weight: 800; font-size: clamp(48px, 9vw, 124px); line-height: 0.92; letter-spacing: -0.02em; margin: 16px 0 0;">Musashi</div>
+      <div class="hero-reveal hero-ink" style="opacity: 0; display: flex; align-items: baseline; gap: 18px; margin: 14px 0 0;">
+        <span style="font-family: 'Shippori Mincho', serif; font-weight: 600; font-size: clamp(26px, 4vw, 44px); letter-spacing: 0.3em; color: var(--ink);">武蔵</span>
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: var(--soft); letter-spacing: 0.05em;">Trinh Ngoc Minh · 鄭玉明</span>
+      </div>
+      <p class="hero-reveal" style="opacity: 0; font-family: 'Shippori Mincho', serif; font-size: clamp(16px, 1.7vw, 20px); color: var(--ink); margin: 26px 0 0; letter-spacing: 0.01em;">
+        Fullstack Developer <span style="color: var(--aka);">·</span> Blockchain Engineer <span style="color: var(--aka);">·</span> Sui Ecosystem
+      </p>
+      <p class="hero-reveal" style="opacity: 0; max-width: 540px; font-size: 16px; line-height: 1.75; color: var(--soft); margin: 16px 0 0;">
+        A practitioner of two disciplines — like Musashi's twin blades, I wield backend systems and decentralized protocols as one. Four years forging privacy-first Web3 infrastructure on Sui, Ethereum, and Polkadot.
+      </p>
+      <div class="hero-reveal" style="opacity: 0; display: flex; gap: 14px; margin: 32px 0 0; flex-wrap: wrap;">
+        <a class="btn-primary" href="#void" style="padding: 13px 26px; border-radius: 8px; background: var(--aka); color: #FFFFFF; font-weight: 700; font-size: 14.5px;">Begin the duel →</a>
+        <a class="btn-ghost" href="https://github.com/musashi0x" target="_blank" style="padding: 13px 26px; border-radius: 8px; border: 1px solid rgba(15,23,42,0.25); font-family: 'IBM Plex Mono', monospace; font-size: 14px;">github.com/musashi0x</a>
+      </div>
     </div>
 
-    <footer class="text-center p-4 md:p-6 mt-8 md:mt-12 text-xs md:text-sm">
-        <p>&copy; <span id="currentYear"></span> Z3ro. All pixels reserved.</p>
-        <p>Powered by coffee and code.</p>
-    </footer>
-
-    <div id="emailModal" class="modal">
-        <div class="modal-content">
-            <span class="modal-close-button" onclick="closeModal()">&times;</span>
-            <p id="modalMessage" class="text-lg text-green-400"></p>
+    <!-- hanging scroll: enso + hanko -->
+    <div class="hanging-scroll" style="opacity: 0; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 420px; border: 1px solid rgba(15,23,42,0.14); border-radius: 6px; background: linear-gradient(175deg, #FFFFFF, #F1F5F9); box-shadow: 0 24px 60px rgba(15,23,42,0.16); padding: 36px 24px;">
+      <!-- vertical kanji -->
+      <div style="position: absolute; top: 24px; right: 26px; writing-mode: vertical-rl; font-family: 'Shippori Mincho', serif; font-weight: 600; font-size: 20px; letter-spacing: 0.25em; color: var(--ink);">二刀流の道</div>
+      <!-- enso -->
+      <div style="position: relative; width: 220px; height: 220px; display: flex; align-items: center; justify-content: center;">
+        <div class="enso-circle" style="position: absolute; inset: 0; opacity: 0; border-radius: 50%;
+          background: conic-gradient(from 215deg, var(--aka) 0deg, var(--aka) 298deg, transparent 322deg 360deg);
+          -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 16px), #000 calc(100% - 15px));
+          mask: radial-gradient(farthest-side, transparent calc(100% - 16px), #000 calc(100% - 15px));"></div>
+        <!-- hanko seal -->
+        <div class="hanko-seal" style="opacity: 0; width: 92px; height: 92px; border-radius: 12px; background: var(--aka); display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 6px 18px rgba(29,78,216,0.35);">
+          <span style="font-family: 'Shippori Mincho', serif; font-weight: 700; font-size: 30px; line-height: 1; color: #FFFFFF;">武</span>
+          <span style="font-family: 'Shippori Mincho', serif; font-weight: 700; font-size: 30px; line-height: 1; color: #FFFFFF;">蔵</span>
         </div>
+      </div>
+      <div style="margin-top: 26px; text-align: center;">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--soft); letter-spacing: 0.04em;">established <span style="color: var(--aka);">2021</span> · vietnam</div>
+        <div style="font-family: 'Shippori Mincho', serif; font-style: italic; font-size: 14px; color: var(--ink); margin-top: 8px;">“Think lightly of yourself, deeply of the world.”</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- STAT STRIP -->
+  <section data-reveal style="position: relative; z-index: 1; max-width: 1180px; margin: 0 auto; padding: 0 44px;">
+    <div class="stat-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1.5px solid rgba(15,23,42,0.85); border-bottom: 1.5px solid rgba(15,23,42,0.85);">
+      <div style="padding: 24px 22px; border-left: 1px solid rgba(15,23,42,0.12);">
+        <div style="font-family: 'Shippori Mincho', serif; font-weight: 700; font-size: 36px; color: var(--aka); letter-spacing: -0.02em;">4+</div>
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: var(--soft); margin-top: 6px; letter-spacing: 0.06em;">YEARS · 修行</div>
+      </div>
+      <div style="padding: 24px 22px; border-left: 1px solid rgba(15,23,42,0.12);">
+        <div style="font-family: 'Shippori Mincho', serif; font-weight: 700; font-size: 36px; color: var(--aka); letter-spacing: -0.02em;">Top 1</div>
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: var(--soft); margin-top: 6px; letter-spacing: 0.06em;">POLKADOT HACKATHON</div>
+      </div>
+      <div style="padding: 24px 22px; border-left: 1px solid rgba(15,23,42,0.12);">
+        <div style="font-family: 'Shippori Mincho', serif; font-weight: 700; font-size: 36px; color: var(--aka); letter-spacing: -0.02em;">3</div>
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: var(--soft); margin-top: 6px; letter-spacing: 0.06em;">CHAINS SHIPPED</div>
+      </div>
+      <div style="padding: 24px 22px; border-left: 1px solid rgba(15,23,42,0.12);">
+        <div style="font-family: 'Shippori Mincho', serif; font-weight: 700; font-size: 36px; color: var(--aka); letter-spacing: -0.02em;">8+</div>
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: var(--soft); margin-top: 6px; letter-spacing: 0.06em;">HACKATHON PLACEMENTS</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 地 EARTH / about -->
+  <section id="earth" data-reveal style="position: relative; z-index: 1; max-width: 1180px; margin: 0 auto; padding: 110px 44px 0;">
+    <div style="display: flex; align-items: baseline; gap: 18px; margin-bottom: 30px;">
+      <span style="font-family: 'Shippori Mincho', serif; font-weight: 800; font-size: 64px; line-height: 1; color: var(--aka);">地</span>
+      <div>
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 0.18em; color: var(--soft);">CHI · 01</div>
+        <div style="font-family: 'Shippori Mincho', serif; font-weight: 700; font-size: 26px;">Earth — the foundation</div>
+      </div>
+    </div>
+    <p style="max-width: 880px; font-family: 'Shippori Mincho', serif; font-weight: 500; font-size: clamp(20px, 2.4vw, 30px); line-height: 1.5; letter-spacing: -0.01em; color: var(--ink); margin: 0;">
+      Fullstack & blockchain developer with a hackathon-proven record, shipping production Web3 systems end-to-end — from <span style="color: var(--aka);">Move smart contracts</span> and Rust spam-gating engines to identity-based encryption, decentralized storage, and zero-knowledge authentication.
+    </p>
+  </section>
+
+  <!-- 水 WATER / stack -->
+  <section id="water" data-reveal style="position: relative; z-index: 1; max-width: 1180px; margin: 0 auto; padding: 100px 44px 0;">
+    <div style="display: flex; align-items: baseline; gap: 18px; margin-bottom: 34px;">
+      <span style="font-family: 'Shippori Mincho', serif; font-weight: 800; font-size: 64px; line-height: 1; color: var(--aka);">水</span>
+      <div>
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 0.18em; color: var(--soft);">SUI · 02</div>
+        <div style="font-family: 'Shippori Mincho', serif; font-weight: 700; font-size: 26px;">Water — the stack that flows to form</div>
+      </div>
+    </div>
+    <div class="skills-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px;">
+      <div class="skill-card" style="border: 1px solid rgba(15,23,42,0.14); border-radius: 10px; background: rgba(255,255,255,0.32); padding: 22px 24px;">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--aka); letter-spacing: 0.1em; margin-bottom: 14px;">BLOCKCHAIN</div>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--ink); padding: 6px 11px; border: 1px solid rgba(15,23,42,0.16); border-radius: 6px; background: rgba(250,250,252,0.5);">Sui (Move)</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--ink); padding: 6px 11px; border: 1px solid rgba(15,23,42,0.16); border-radius: 6px; background: rgba(250,250,252,0.5);">Solidity</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--ink); padding: 6px 11px; border: 1px solid rgba(15,23,42,0.16); border-radius: 6px; background: rgba(250,250,252,0.5);">Rust</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--ink); padding: 6px 11px; border: 1px solid rgba(15,23,42,0.16); border-radius: 6px; background: rgba(250,250,252,0.5);">Polkadot</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--ink); padding: 6px 11px; border: 1px solid rgba(15,23,42,0.16); border-radius: 6px; background: rgba(250,250,252,0.5);">Algorand</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--ink); padding: 6px 11px; border: 1px solid rgba(15,23,42,0.16); border-radius: 6px; background: rgba(250,250,252,0.5);">Web3.js</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--ink); padding: 6px 11px; border: 1px solid rgba(15,23,42,0.16); border-radius: 6px; background: rgba(250,250,252,0.5);">ethers.js</span>
+        </div>
+      </div>
+      <div class="skill-card" style="border: 1px solid rgba(15,23,42,0.14); border-radius: 10px; background: rgba(255,255,255,0.32); padding: 22px 24px;">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--aka); letter-spacing: 0.1em; margin-bottom: 14px;">SUI ECOSYSTEM</div>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--ink); padding: 6px 11px; border: 1px solid rgba(15,23,42,0.16); border-radius: 6px; background: rgba(250,250,252,0.5);">Move Contracts</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--ink); padding: 6px 11px; border: 1px solid rgba(15,23,42,0.16); border-radius: 6px; background: rgba(250,250,252,0.5);">Seal IBE</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--ink); padding: 6px 11px; border: 1px solid rgba(15,23,42,0.16); border-radius: 6px; background: rgba(250,250,252,0.5);">Walrus Storage</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--ink); padding: 6px 11px; border: 1px solid rgba(15,23,42,0.16); border-radius: 6px; background: rgba(250,250,252,0.5);">SuiNS</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--ink); padding: 6px 11px; border: 1px solid rgba(15,23,42,0.16); border-radius: 6px; background: rgba(250,250,252,0.5);">zkLogin</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--ink); padding: 6px 11px; border: 1px solid rgba(15,23,42,0.16); border-radius: 6px; background: rgba(250,250,252,0.5);">Payment Kit</span>
+        </div>
+      </div>
+      <div class="skill-card" style="border: 1px solid rgba(15,23,42,0.14); border-radius: 10px; background: rgba(255,255,255,0.32); padding: 22px 24px;">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--aka); letter-spacing: 0.1em; margin-bottom: 14px;">LANGUAGES</div>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--ink); padding: 6px 11px; border: 1px solid rgba(15,23,42,0.16); border-radius: 6px; background: rgba(250,250,252,0.5);">TypeScript</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--ink); padding: 6px 11px; border: 1px solid rgba(15,23,42,0.16); border-radius: 6px; background: rgba(250,250,252,0.5);">JavaScript</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--ink); padding: 6px 11px; border: 1px solid rgba(15,23,42,0.16); border-radius: 6px; background: rgba(250,250,252,0.5);">Rust</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--ink); padding: 6px 11px; border: 1px solid rgba(15,23,42,0.16); border-radius: 6px; background: rgba(250,250,252,0.5);">Move</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--ink); padding: 6px 11px; border: 1px solid rgba(15,23,42,0.16); border-radius: 6px; background: rgba(250,250,252,0.5);">Solidity</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--ink); padding: 6px 11px; border: 1px solid rgba(15,23,42,0.16); border-radius: 6px; background: rgba(250,250,252,0.5);">C++</span>
+        </div>
+      </div>
+      <div class="skill-card" style="border: 1px solid rgba(15,23,42,0.14); border-radius: 10px; background: rgba(255,255,255,0.32); padding: 22px 24px;">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--aka); letter-spacing: 0.1em; margin-bottom: 14px;">BACKEND</div>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--ink); padding: 6px 11px; border: 1px solid rgba(15,23,42,0.16); border-radius: 6px; background: rgba(250,250,252,0.5);">NestJS</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--ink); padding: 6px 11px; border: 1px solid rgba(15,23,42,0.16); border-radius: 6px; background: rgba(250,250,252,0.5);">Node.js</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--ink); padding: 6px 11px; border: 1px solid rgba(15,23,42,0.16); border-radius: 6px; background: rgba(250,250,252,0.5);">Express.js</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--ink); padding: 6px 11px; border: 1px solid rgba(15,23,42,0.16); border-radius: 6px; background: rgba(250,250,252,0.5);">Axum</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--ink); padding: 6px 11px; border: 1px solid rgba(15,23,42,0.16); border-radius: 6px; background: rgba(250,250,252,0.5);">Actix</span>
+        </div>
+      </div>
+      <div class="skill-card" style="border: 1px solid rgba(15,23,42,0.14); border-radius: 10px; background: rgba(255,255,255,0.32); padding: 22px 24px;">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--aka); letter-spacing: 0.1em; margin-bottom: 14px;">FRONTEND</div>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--ink); padding: 6px 11px; border: 1px solid rgba(15,23,42,0.16); border-radius: 6px; background: rgba(250,250,252,0.5);">Next.js</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--ink); padding: 6px 11px; border: 1px solid rgba(15,23,42,0.16); border-radius: 6px; background: rgba(250,250,252,0.5);">React.js</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--ink); padding: 6px 11px; border: 1px solid rgba(15,23,42,0.16); border-radius: 6px; background: rgba(250,250,252,0.5);">Angular</span>
+        </div>
+      </div>
+      <div class="skill-card" style="border: 1px solid rgba(15,23,42,0.14); border-radius: 10px; background: rgba(255,255,255,0.32); padding: 22px 24px;">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--aka); letter-spacing: 0.1em; margin-bottom: 14px;">DATA & INFRA</div>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--ink); padding: 6px 11px; border: 1px solid rgba(15,23,42,0.16); border-radius: 6px; background: rgba(250,250,252,0.5);">PostgreSQL</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--ink); padding: 6px 11px; border: 1px solid rgba(15,23,42,0.16); border-radius: 6px; background: rgba(250,250,252,0.5);">MySQL</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--ink); padding: 6px 11px; border: 1px solid rgba(15,23,42,0.16); border-radius: 6px; background: rgba(250,250,252,0.5);">MongoDB</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--ink); padding: 6px 11px; border: 1px solid rgba(15,23,42,0.16); border-radius: 6px; background: rgba(250,250,252,0.5);">Drizzle</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--ink); padding: 6px 11px; border: 1px solid rgba(15,23,42,0.16); border-radius: 6px; background: rgba(250,250,252,0.5);">Docker</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--ink); padding: 6px 11px; border: 1px solid rgba(15,23,42,0.16); border-radius: 6px; background: rgba(250,250,252,0.5);">AWS</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--ink); padding: 6px 11px; border: 1px solid rgba(15,23,42,0.16); border-radius: 6px; background: rgba(250,250,252,0.5);">GCP</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--ink); padding: 6px 11px; border: 1px solid rgba(15,23,42,0.16); border-radius: 6px; background: rgba(250,250,252,0.5);">CI/CD</span>
+        </div>
+      </div>
+      <div class="skill-card" style="border: 1px solid rgba(15,23,42,0.14); border-radius: 10px; background: rgba(255,255,255,0.32); padding: 22px 24px;">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--aka); letter-spacing: 0.1em; margin-bottom: 14px;">CRYPTOGRAPHY</div>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--ink); padding: 6px 11px; border: 1px solid rgba(15,23,42,0.16); border-radius: 6px; background: rgba(250,250,252,0.5);">IBE (Seal)</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--ink); padding: 6px 11px; border: 1px solid rgba(15,23,42,0.16); border-radius: 6px; background: rgba(250,250,252,0.5);">AES-256-GCM</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--ink); padding: 6px 11px; border: 1px solid rgba(15,23,42,0.16); border-radius: 6px; background: rgba(250,250,252,0.5);">Shamir Secret Sharing</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--ink); padding: 6px 11px; border: 1px solid rgba(15,23,42,0.16); border-radius: 6px; background: rgba(250,250,252,0.5);">ML-KEM-768</span>
+        </div>
+      </div>
+      <div class="skill-card" style="border: 1px solid rgba(15,23,42,0.14); border-radius: 10px; background: rgba(255,255,255,0.32); padding: 22px 24px;">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--aka); letter-spacing: 0.1em; margin-bottom: 14px;">METHODS</div>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--ink); padding: 6px 11px; border: 1px solid rgba(15,23,42,0.16); border-radius: 6px; background: rgba(250,250,252,0.5);">Agile</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--ink); padding: 6px 11px; border: 1px solid rgba(15,23,42,0.16); border-radius: 6px; background: rgba(250,250,252,0.5);">TDD</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--ink); padding: 6px 11px; border: 1px solid rgba(15,23,42,0.16); border-radius: 6px; background: rgba(250,250,252,0.5);">Event-driven</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--ink); padding: 6px 11px; border: 1px solid rgba(15,23,42,0.16); border-radius: 6px; background: rgba(250,250,252,0.5);">TEE</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 火 FIRE / featured + side -->
+  <section id="fire" data-reveal style="position: relative; z-index: 1; max-width: 1180px; margin: 0 auto; padding: 110px 44px 0;">
+    <div style="display: flex; align-items: baseline; gap: 18px; margin-bottom: 34px;">
+      <span style="font-family: 'Shippori Mincho', serif; font-weight: 800; font-size: 64px; line-height: 1; color: var(--aka);">火</span>
+      <div>
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 0.18em; color: var(--soft);">KA · 03</div>
+        <div style="font-family: 'Shippori Mincho', serif; font-weight: 700; font-size: 26px;">Fire — the forged work</div>
+      </div>
+    </div>
+    <!-- featured SuiMail -->
+    <div style="border: 1.5px solid rgba(15,23,42,0.85); border-radius: 14px; background: linear-gradient(165deg, rgba(29,78,216,0.06), transparent 60%); padding: 38px 40px; position: relative; overflow: hidden;">
+      <div style="position: absolute; top: -10px; right: 20px; font-family: 'Shippori Mincho', serif; font-weight: 800; font-size: 120px; color: rgba(29,78,216,0.06); line-height: 1;">壱</div>
+      <div style="display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 12px; position: relative;">
+        <h3 style="font-family: 'Shippori Mincho', serif; font-weight: 700; font-size: clamp(30px, 4.4vw, 50px); margin: 0; letter-spacing: -0.02em;">SuiMail</h3>
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--aka); border: 1px solid var(--aka); padding: 6px 12px; border-radius: 999px;">CommandOSS Labs · 2025</span>
+      </div>
+      <p style="max-width: 760px; font-size: 16px; line-height: 1.7; color: var(--soft); margin: 14px 0 28px; position: relative;">
+        A privacy-first decentralized email protocol on the Sui blockchain — architected and built full-stack, from Move smart contracts to Rust backend services and a Next.js frontend.
+      </p>
+      <div class="suimail-feats" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px 30px; position: relative;">
+        <div style="display: flex; gap: 12px; align-items: flex-start;">
+          <span style="flex: none; margin-top: 6px; width: 7px; height: 7px; background: var(--aka); transform: rotate(45deg);"></span>
+          <span style="font-size: 14.5px; line-height: 1.55; color: var(--soft);"><strong style="color: var(--ink); font-weight: 700;">Spam-gating engine.</strong> Per-mailbox GatingConfig Move objects + a Rust engine classifying mail into drop / pass-free / toll-payment flows — a cryptoeconomic anti-spam layer.</span>
+        </div>
+        <div style="display: flex; gap: 12px; align-items: flex-start;">
+          <span style="flex: none; margin-top: 6px; width: 7px; height: 7px; background: var(--aka); transform: rotate(45deg);"></span>
+          <span style="font-size: 14.5px; line-height: 1.55; color: var(--soft);"><strong style="color: var(--ink); font-weight: 700;">End-to-end encryption.</strong> Seal IBE so only intended recipients decrypt, with no key-exchange overhead.</span>
+        </div>
+        <div style="display: flex; gap: 12px; align-items: flex-start;">
+          <span style="flex: none; margin-top: 6px; width: 7px; height: 7px; background: var(--aka); transform: rotate(45deg);"></span>
+          <span style="font-size: 14.5px; line-height: 1.55; color: var(--soft);"><strong style="color: var(--ink); font-weight: 700;">Censorship-resistant storage.</strong> A Walrus pipeline for tamper-proof on-chain message storage with off-chain availability.</span>
+        </div>
+        <div style="display: flex; gap: 12px; align-items: flex-start;">
+          <span style="flex: none; margin-top: 6px; width: 7px; height: 7px; background: var(--aka); transform: rotate(45deg);"></span>
+          <span style="font-size: 14.5px; line-height: 1.55; color: var(--soft);"><strong style="color: var(--ink); font-weight: 700;">Human-readable identity.</strong> SuiNS addressing (user@suins.sui) maps names to on-chain mailboxes instead of wallet addresses.</span>
+        </div>
+        <div style="display: flex; gap: 12px; align-items: flex-start;">
+          <span style="flex: none; margin-top: 6px; width: 7px; height: 7px; background: var(--aka); transform: rotate(45deg);"></span>
+          <span style="font-size: 14.5px; line-height: 1.55; color: var(--soft);"><strong style="color: var(--ink); font-weight: 700;">Web2 → Web3 auth.</strong> zkLogin lets users sign in via Google/Apple OAuth without managing private keys.</span>
+        </div>
+        <div style="display: flex; gap: 12px; align-items: flex-start;">
+          <span style="flex: none; margin-top: 6px; width: 7px; height: 7px; background: var(--aka); transform: rotate(45deg);"></span>
+          <span style="font-size: 14.5px; line-height: 1.55; color: var(--soft);"><strong style="color: var(--ink); font-weight: 700;">TEE custodial wallets.</strong> Oyster CVM key protection using Shamir Secret Sharing + AES-256-GCM for sender key management.</span>
+        </div>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; position: relative;">
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: var(--ink); padding: 5px 10px; border: 1px solid rgba(15,23,42,0.2); border-radius: 6px;">Move</span>
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: var(--ink); padding: 5px 10px; border: 1px solid rgba(15,23,42,0.2); border-radius: 6px;">Rust</span>
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: var(--ink); padding: 5px 10px; border: 1px solid rgba(15,23,42,0.2); border-radius: 6px;">Next.js</span>
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: var(--ink); padding: 5px 10px; border: 1px solid rgba(15,23,42,0.2); border-radius: 6px;">Seal IBE</span>
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: var(--ink); padding: 5px 10px; border: 1px solid rgba(15,23,42,0.2); border-radius: 6px;">Walrus</span>
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: var(--ink); padding: 5px 10px; border: 1px solid rgba(15,23,42,0.2); border-radius: 6px;">SuiNS</span>
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: var(--ink); padding: 5px 10px; border: 1px solid rgba(15,23,42,0.2); border-radius: 6px;">zkLogin</span>
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: var(--ink); padding: 5px 10px; border: 1px solid rgba(15,23,42,0.2); border-radius: 6px;">PostgreSQL</span>
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: var(--ink); padding: 5px 10px; border: 1px solid rgba(15,23,42,0.2); border-radius: 6px;">Drizzle</span>
+      </div>
+    </div>
+    <!-- side projects -->
+    <div class="side-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 16px;">
+      <div class="side-card" style="border: 1px solid rgba(15,23,42,0.14); border-radius: 10px; background: rgba(255,255,255,0.32); padding: 22px; display: flex; flex-direction: column; min-height: 170px;">
+        <div style="font-family: 'Shippori Mincho', serif; font-weight: 700; font-size: 18px;">Social Media API</div>
+        <div style="font-size: 13.5px; line-height: 1.6; color: var(--soft); margin-top: 10px; flex: 1;">Real-time social features with an event-driven architecture and full Socket.IO client/server implementation.</div>
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: var(--aka); margin-top: 12px;">NestJS · Socket.io · Mongo</div>
+      </div>
+      <div class="side-card" style="border: 1px solid rgba(15,23,42,0.14); border-radius: 10px; background: rgba(255,255,255,0.32); padding: 22px; display: flex; flex-direction: column; min-height: 170px;">
+        <div style="font-family: 'Shippori Mincho', serif; font-weight: 700; font-size: 18px;">Medium News</div>
+        <div style="font-size: 13.5px; line-height: 1.6; color: var(--soft); margin-top: 10px; flex: 1;">Technology news site — a RESTful API paired with a responsive React frontend.</div>
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: var(--aka); margin-top: 12px;">Node · Express · React</div>
+      </div>
+      <div class="side-card" style="border: 1px solid rgba(15,23,42,0.14); border-radius: 10px; background: rgba(255,255,255,0.32); padding: 22px; display: flex; flex-direction: column; min-height: 170px;">
+        <div style="font-family: 'Shippori Mincho', serif; font-weight: 700; font-size: 18px;">@zero_automation</div>
+        <div style="font-size: 13.5px; line-height: 1.6; color: var(--soft); margin-top: 10px; flex: 1;">Telegram bot for automated university attendance tracking with timestamped, encrypted access controls.</div>
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: var(--aka); margin-top: 12px;">Node · Telegraf · MySQL</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 風 WIND / experience -->
+  <section id="wind" data-reveal style="position: relative; z-index: 1; max-width: 1180px; margin: 0 auto; padding: 110px 44px 0;">
+    <div style="display: flex; align-items: baseline; gap: 18px; margin-bottom: 30px;">
+      <span style="font-family: 'Shippori Mincho', serif; font-weight: 800; font-size: 64px; line-height: 1; color: var(--aka);">風</span>
+      <div>
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 0.18em; color: var(--soft);">FŪ · 04</div>
+        <div style="font-family: 'Shippori Mincho', serif; font-weight: 700; font-size: 26px;">Wind — the path traveled</div>
+      </div>
     </div>
 
-    <script>
-        // Set current year in footer
-        document.getElementById('currentYear').textContent = new Date().getFullYear();
+    <div class="exp-row" style="display: grid; grid-template-columns: 210px 1fr; gap: 30px; padding: 30px 0; border-top: 1px solid rgba(15,23,42,0.16);">
+      <div>
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--soft);">Aug 2025 — Present</div>
+        <div style="font-family: 'Shippori Mincho', serif; font-weight: 700; font-size: 18px; margin-top: 8px; color: var(--aka);">CommandOSS Labs</div>
+        <div style="font-size: 13px; color: var(--soft); margin-top: 4px;">Blockchain Developer</div>
+      </div>
+      <div>
+        <div style="margin-bottom: 16px;">
+          <div style="font-family: 'Shippori Mincho', serif; font-weight: 700; font-size: 16px; color: var(--ink);">SuiMail — Decentralized Email Protocol</div>
+          <div style="font-size: 14.5px; line-height: 1.6; color: var(--soft); margin-top: 5px;">Architected and built a privacy-first email platform full-stack: Move contracts, a Rust spam-gating backend, event-driven SMTP-to-chain pipeline, and a Next.js frontend.</div>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 7px; margin-top: 2px;">
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--soft); padding: 4px 9px; border: 1px solid rgba(15,23,42,0.16); border-radius: 5px;">Sui (Move)</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--soft); padding: 4px 9px; border: 1px solid rgba(15,23,42,0.16); border-radius: 5px;">Rust</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--soft); padding: 4px 9px; border: 1px solid rgba(15,23,42,0.16); border-radius: 5px;">Next.js</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--soft); padding: 4px 9px; border: 1px solid rgba(15,23,42,0.16); border-radius: 5px;">Seal IBE</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--soft); padding: 4px 9px; border: 1px solid rgba(15,23,42,0.16); border-radius: 5px;">Walrus</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--soft); padding: 4px 9px; border: 1px solid rgba(15,23,42,0.16); border-radius: 5px;">zkLogin</span>
+        </div>
+      </div>
+    </div>
 
-        // Smooth scrolling for navigation links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href');
-                const targetElement = document.querySelector(targetId);
-                if (targetElement) {
-                    targetElement.scrollIntoView({
-                        behavior: 'smooth'
-                    });
-                }
-            });
-        });
+    <div class="exp-row" style="display: grid; grid-template-columns: 210px 1fr; gap: 30px; padding: 30px 0; border-top: 1px solid rgba(15,23,42,0.16);">
+      <div>
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--soft);">Dec 2024 — Aug 2025</div>
+        <div style="font-family: 'Shippori Mincho', serif; font-weight: 700; font-size: 18px; margin-top: 8px; color: var(--aka);">FPT Software</div>
+        <div style="font-size: 13px; color: var(--soft); margin-top: 4px;">Backend Developer</div>
+      </div>
+      <div>
+        <div style="margin-bottom: 16px;">
+          <div style="font-family: 'Shippori Mincho', serif; font-weight: 700; font-size: 16px; color: var(--ink);">Scoot — HR Platform</div>
+          <div style="font-size: 14.5px; line-height: 1.6; color: var(--soft); margin-top: 5px;">Built and maintained NestJS REST APIs for onboarding and payroll, optimized Postgres/Mongo queries for HR analytics, and deployed scalable services on AWS ECS + Lambda.</div>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 7px; margin-top: 2px;">
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--soft); padding: 4px 9px; border: 1px solid rgba(15,23,42,0.16); border-radius: 5px;">NestJS</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--soft); padding: 4px 9px; border: 1px solid rgba(15,23,42,0.16); border-radius: 5px;">Angular</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--soft); padding: 4px 9px; border: 1px solid rgba(15,23,42,0.16); border-radius: 5px;">PostgreSQL</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--soft); padding: 4px 9px; border: 1px solid rgba(15,23,42,0.16); border-radius: 5px;">MongoDB</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--soft); padding: 4px 9px; border: 1px solid rgba(15,23,42,0.16); border-radius: 5px;">AWS</span>
+        </div>
+      </div>
+    </div>
 
-        // Email copy functionality
-        const emailLink = document.getElementById('emailLink');
-        const emailModal = document.getElementById('emailModal');
-        const modalMessage = document.getElementById('modalMessage');
+    <div class="exp-row" style="display: grid; grid-template-columns: 210px 1fr; gap: 30px; padding: 30px 0; border-top: 1px solid rgba(15,23,42,0.16);">
+      <div>
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--soft);">Sep 2023 — Oct 2024</div>
+        <div style="font-family: 'Shippori Mincho', serif; font-weight: 700; font-size: 18px; margin-top: 8px; color: var(--aka);">Zigexn Ventura</div>
+        <div style="font-size: 13px; color: var(--soft); margin-top: 4px;">Backend Developer</div>
+      </div>
+      <div>
+        <div style="margin-bottom: 16px;">
+          <div style="font-family: 'Shippori Mincho', serif; font-weight: 700; font-size: 16px; color: var(--ink);">BumCheo — Manga Social Network</div>
+          <div style="font-size: 14.5px; line-height: 1.6; color: var(--soft); margin-top: 5px;">NestJS APIs with SSO + Firebase; cut response times 37% via query optimization; 85% Jest coverage, 30% fewer production bugs.</div>
+        </div>
+        <div style="margin-bottom: 16px;">
+          <div style="font-family: 'Shippori Mincho', serif; font-weight: 700; font-size: 16px; color: var(--ink);">NFT Marketplace</div>
+          <div style="font-size: 14.5px; line-height: 1.6; color: var(--soft); margin-top: 5px;">Solidity contracts for minting/trading integrated via Web3.js on a Node/Express backend, with 90% test coverage.</div>
+        </div>
+        <div style="margin-bottom: 16px;">
+          <div style="font-family: 'Shippori Mincho', serif; font-weight: 700; font-size: 16px; color: var(--ink);">Dorapita & Kuruma</div>
+          <div style="font-size: 14.5px; line-height: 1.6; color: var(--soft); margin-top: 5px;">Logistics and used-car platforms — Twilio/SendGrid integrations, payment gateways, and 20–25% faster MySQL/Postgres queries.</div>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 7px; margin-top: 2px;">
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--soft); padding: 4px 9px; border: 1px solid rgba(15,23,42,0.16); border-radius: 5px;">NestJS</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--soft); padding: 4px 9px; border: 1px solid rgba(15,23,42,0.16); border-radius: 5px;">Solidity</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--soft); padding: 4px 9px; border: 1px solid rgba(15,23,42,0.16); border-radius: 5px;">Web3.js</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--soft); padding: 4px 9px; border: 1px solid rgba(15,23,42,0.16); border-radius: 5px;">PostgreSQL</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--soft); padding: 4px 9px; border: 1px solid rgba(15,23,42,0.16); border-radius: 5px;">MySQL</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--soft); padding: 4px 9px; border: 1px solid rgba(15,23,42,0.16); border-radius: 5px;">ReactJS</span>
+        </div>
+      </div>
+    </div>
 
-        emailLink.addEventListener('click', function(event) {
-            event.preventDefault(); // Prevent mailto link
-            const email = this.textContent;
-            navigator.clipboard.writeText(email).then(() => {
-                modalMessage.textContent = 'Email address copied to clipboard!';
-                modalMessage.className = 'text-lg text-green-400'; // Success color
-                emailModal.style.display = 'flex';
-            }).catch(err => {
-                console.error('Failed to copy email: ', err);
-                modalMessage.textContent = 'Failed to copy. Please copy manually.';
-                modalMessage.className = 'text-lg text-red-400'; // Error color
-                emailModal.style.display = 'flex';
-            });
-        });
+    <div class="exp-row" style="display: grid; grid-template-columns: 210px 1fr; gap: 30px; padding: 30px 0; border-top: 1px solid rgba(15,23,42,0.16);">
+      <div>
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--soft);">Oct 2021 — Aug 2023</div>
+        <div style="font-family: 'Shippori Mincho', serif; font-weight: 700; font-size: 18px; margin-top: 8px; color: var(--aka);">Bestarion</div>
+        <div style="font-size: 13px; color: var(--soft); margin-top: 4px;">Backend Developer</div>
+      </div>
+      <div>
+        <div style="margin-bottom: 16px;">
+          <div style="font-family: 'Shippori Mincho', serif; font-weight: 700; font-size: 16px; color: var(--ink);">Net Truyen — Manga Platform</div>
+          <div style="font-size: 14.5px; line-height: 1.6; color: var(--soft); margin-top: 5px;">Scalable REST APIs with payment + social integrations; +37% Postgres performance; secure auth on a high-traffic content platform.</div>
+        </div>
+        <div style="margin-bottom: 16px;">
+          <div style="font-family: 'Shippori Mincho', serif; font-weight: 700; font-size: 16px; color: var(--ink);">HRM — Internal HR System</div>
+          <div style="font-size: 14.5px; line-height: 1.6; color: var(--soft); margin-top: 5px;">Node.js HRM app with a zero-downtime migration from legacy systems to PostgreSQL.</div>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 7px; margin-top: 2px;">
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--soft); padding: 4px 9px; border: 1px solid rgba(15,23,42,0.16); border-radius: 5px;">Node.js</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--soft); padding: 4px 9px; border: 1px solid rgba(15,23,42,0.16); border-radius: 5px;">Express.js</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--soft); padding: 4px 9px; border: 1px solid rgba(15,23,42,0.16); border-radius: 5px;">ReactJS</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--soft); padding: 4px 9px; border: 1px solid rgba(15,23,42,0.16); border-radius: 5px;">PostgreSQL</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--soft); padding: 4px 9px; border: 1px solid rgba(15,23,42,0.16); border-radius: 5px;">Linux</span>
+        </div>
+      </div>
+    </div>
+  </section>
 
-        function closeModal() {
-            emailModal.style.display = 'none';
+  <!-- HACKATHONS -->
+  <section data-reveal style="position: relative; z-index: 1; max-width: 1180px; margin: 0 auto; padding: 100px 44px 0;">
+    <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--aka); letter-spacing: 0.18em; margin-bottom: 22px;">武功 · DUELS WON</div>
+    <div class="hack-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); border-top: 1px solid rgba(15,23,42,0.18);">
+      <div style="padding: 18px 22px; display: flex; align-items: center; gap: 16px; border-bottom: 1px solid rgba(15,23,42,0.12); border-left: 1px solid rgba(15,23,42,0.08);">
+        <span style="flex: none; font-family: 'Shippori Mincho', serif; font-weight: 700; font-size: 13px; color: #FFFFFF; background: var(--aka); padding: 5px 10px; border-radius: 5px; min-width: 56px; text-align: center;">Top 1</span>
+        <div>
+          <div style="font-size: 14.5px; color: var(--ink); font-weight: 500;">Polkadot Hackathon — Rust blockchain solution</div>
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--soft); margin-top: 2px;">2024</div>
+        </div>
+      </div>
+      <div style="padding: 18px 22px; display: flex; align-items: center; gap: 16px; border-bottom: 1px solid rgba(15,23,42,0.12); border-left: 1px solid rgba(15,23,42,0.08);">
+        <span style="flex: none; font-family: 'Shippori Mincho', serif; font-weight: 700; font-size: 13px; color: #FFFFFF; background: var(--aka); padding: 5px 10px; border-radius: 5px; min-width: 56px; text-align: center;">Top 5</span>
+        <div>
+          <div style="font-size: 14.5px; color: var(--ink); font-weight: 500;">Movement Hackathon — dApp in Move</div>
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--soft); margin-top: 2px;">2024</div>
+        </div>
+      </div>
+      <div style="padding: 18px 22px; display: flex; align-items: center; gap: 16px; border-bottom: 1px solid rgba(15,23,42,0.12); border-left: 1px solid rgba(15,23,42,0.08);">
+        <span style="flex: none; font-family: 'Shippori Mincho', serif; font-weight: 700; font-size: 13px; color: #FFFFFF; background: var(--aka); padding: 5px 10px; border-radius: 5px; min-width: 56px; text-align: center;">Top 10</span>
+        <div>
+          <div style="font-size: 14.5px; color: var(--ink); font-weight: 500;">Web3 Idea Hackathon</div>
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--soft); margin-top: 2px;">2025</div>
+        </div>
+      </div>
+      <div style="padding: 18px 22px; display: flex; align-items: center; gap: 16px; border-bottom: 1px solid rgba(15,23,42,0.12); border-left: 1px solid rgba(15,23,42,0.08);">
+        <span style="flex: none; font-family: 'Shippori Mincho', serif; font-weight: 700; font-size: 13px; color: #FFFFFF; background: var(--aka); padding: 5px 10px; border-radius: 5px; min-width: 56px; text-align: center;">Top 10</span>
+        <div>
+          <div style="font-size: 14.5px; color: var(--ink); font-weight: 500;">CTF Algorand Challenge</div>
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--soft); margin-top: 2px;">2024</div>
+        </div>
+      </div>
+      <div style="padding: 18px 22px; display: flex; align-items: center; gap: 16px; border-bottom: 1px solid rgba(15,23,42,0.12); border-left: 1px solid rgba(15,23,42,0.08);">
+        <span style="flex: none; font-family: 'Shippori Mincho', serif; font-weight: 700; font-size: 13px; color: #FFFFFF; background: var(--aka); padding: 5px 10px; border-radius: 5px; min-width: 56px; text-align: center;">Top 20</span>
+        <div>
+          <div style="font-size: 14.5px; color: var(--ink); font-weight: 500;">Algorand Hackathon — Python dApp</div>
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--soft); margin-top: 2px;">2024</div>
+        </div>
+      </div>
+      <div style="padding: 18px 22px; display: flex; align-items: center; gap: 16px; border-bottom: 1px solid rgba(15,23,42,0.12); border-left: 1px solid rgba(15,23,42,0.08);">
+        <span style="flex: none; font-family: 'Shippori Mincho', serif; font-weight: 700; font-size: 13px; color: #FFFFFF; background: var(--aka); padding: 5px 10px; border-radius: 5px; min-width: 56px; text-align: center;">3rd</span>
+        <div>
+          <div style="font-size: 14.5px; color: var(--ink); font-weight: 500;">University Codeforces Competition</div>
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--soft); margin-top: 2px;">2021</div>
+        </div>
+      </div>
+      <div style="padding: 18px 22px; display: flex; align-items: center; gap: 16px; border-bottom: 1px solid rgba(15,23,42,0.12); border-left: 1px solid rgba(15,23,42,0.08);">
+        <span style="flex: none; font-family: 'Shippori Mincho', serif; font-weight: 700; font-size: 13px; color: #FFFFFF; background: var(--aka); padding: 5px 10px; border-radius: 5px; min-width: 56px; text-align: center;">3rd</span>
+        <div>
+          <div style="font-size: 14.5px; color: var(--ink); font-weight: 500;">BHK IoT Challenge</div>
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--soft); margin-top: 2px;">2021</div>
+        </div>
+      </div>
+      <div style="padding: 18px 22px; display: flex; align-items: center; gap: 16px; border-bottom: 1px solid rgba(15,23,42,0.12); border-left: 1px solid rgba(15,23,42,0.08);">
+        <span style="flex: none; font-family: 'Shippori Mincho', serif; font-weight: 700; font-size: 13px; color: #FFFFFF; background: var(--aka); padding: 5px 10px; border-radius: 5px; min-width: 56px; text-align: center;">3rd</span>
+        <div>
+          <div style="font-size: 14.5px; color: var(--ink); font-weight: 500;">Student Scientific Research — Blockchain</div>
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--soft); margin-top: 2px;">2023</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 空 VOID / contact -->
+  <section id="void" data-reveal style="position: relative; z-index: 1; max-width: 1180px; margin: 0 auto; padding: 120px 44px 44px;">
+    <div style="border: 1.5px solid rgba(15,23,42,0.85); border-radius: 16px; background: linear-gradient(165deg, rgba(29,78,216,0.07), transparent 70%); padding: 64px 48px; text-align: center; position: relative; overflow: hidden;">
+      <span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); font-family: 'Shippori Mincho', serif; font-weight: 800; font-size: 280px; color: rgba(15,23,42,0.04); line-height: 1; pointer-events: none;">空</span>
+      <div style="position: relative;">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--aka); letter-spacing: 0.18em;">KŪ · 05 · THE VOID</div>
+        <h2 style="font-family: 'Shippori Mincho', serif; font-weight: 700; font-size: clamp(32px, 5vw, 58px); letter-spacing: -0.02em; margin: 18px 0 0; line-height: 1.1;">Let us cross blades.</h2>
+        <p style="max-width: 480px; margin: 16px auto 0; font-size: 15.5px; line-height: 1.7; color: var(--soft);">Open to Web3 engineering roles and collaborations. The strategy of building, like the strategy of the sword, is the same.</p>
+        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; margin-top: 34px;">
+          <a class="btn-primary" href="tel:+840708205031" style="padding: 14px 26px; border-radius: 8px; background: var(--aka); color: #FFFFFF; font-weight: 700; font-size: 15px;">+84 070 820 5031</a>
+          <a class="btn-ghost" href="https://github.com/musashi0x" target="_blank" style="padding: 14px 26px; border-radius: 8px; border: 1px solid rgba(15,23,42,0.25); font-family: 'IBM Plex Mono', monospace; font-size: 14px;">github.com/musashi0x</a>
+        </div>
+      </div>
+    </div>
+    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-top: 36px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color<!-- GSAP & ScrollTrigger -->
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<!-- Lenis Smooth Scroll -->
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+
+<script>
+  function initAnimations() {
+    // Failsafe: if GSAP or Lenis fails to load, make all content visible immediately
+    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined' || typeof Lenis === 'undefined') {
+      console.warn("GSAP or Lenis failed to load. Falling back to static display.");
+      document.querySelectorAll('[data-reveal]').forEach(el => {
+        el.style.opacity = '1';
+      });
+      document.querySelectorAll('.hero-reveal, .hero-ink, .hanging-scroll, .enso-circle, .hanko-seal').forEach(el => {
+        el.style.opacity = '1';
+        el.style.filter = 'none';
+        el.style.clipPath = 'none';
+      });
+      return;
+    }
+
+    // Register GSAP ScrollTrigger
+    gsap.registerPlugin(ScrollTrigger);
+
+    // 1. Initialize Lenis Smooth Scroll
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Smooth exponential easing
+      smoothWheel: true,
+      wheelMultiplier: 1.0,
+    });
+
+    // Synchronize ScrollTrigger with Lenis
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add((time) => {
+      lenis.raf(time * 1000);
+    });
+    gsap.ticker.lagSmoothing(0);
+
+    // 2. Scroll Progress Bar
+    gsap.to("#scroll-progress", {
+      scaleX: 1,
+      ease: "none",
+      scrollTrigger: {
+        trigger: "body",
+        start: "top top",
+        end: "bottom bottom",
+        scrub: true
+      }
+    });
+
+    // 3. Giant Watermark Parallax (Subtle drift behind sections)
+    gsap.set("#giant-watermark", { xPercent: -50, yPercent: -50 });
+    gsap.to("#giant-watermark", {
+      scrollTrigger: {
+        trigger: "body",
+        start: "top top",
+        end: "bottom bottom",
+        scrub: true
+      },
+      yPercent: -20, // drift up slowly as scroll goes down
+      ease: "none"
+    });
+
+    // 4. Hero Entrance Timeline
+    const heroTl = gsap.timeline({ defaults: { ease: "power3.out" } });
+
+    // Stagger fade-up left text column with soft blur
+    gsap.set(".hero-reveal:not(.hero-ink)", { y: 20, filter: "blur(3px)", opacity: 0 });
+    heroTl.to(".hero-reveal:not(.hero-ink)", {
+      opacity: 1,
+      y: 0,
+      filter: "blur(0px)",
+      stagger: 0.08,
+      duration: 1.2,
+      onComplete: () => {
+        gsap.set(".hero-reveal:not(.hero-ink)", { clearProps: "transform,filter" });
+      }
+    });
+
+    // Fade-up and ink-bleed names
+    gsap.set(".hero-ink", { filter: "blur(12px)", y: 15, opacity: 0 });
+    heroTl.to(".hero-ink", {
+      opacity: 1,
+      y: 0,
+      filter: "blur(0px)",
+      duration: 1.6,
+      stagger: 0.12,
+      onComplete: () => {
+        gsap.set(".hero-ink", { clearProps: "transform,filter" });
+      }
+    }, 0.2);
+
+    // Hanging scroll unroll (dynamic clip-path reveal)
+    gsap.set(".hanging-scroll", { clipPath: "inset(0 0 100% 0)", opacity: 0 });
+    heroTl.to(".hanging-scroll", {
+      opacity: 1,
+      clipPath: "inset(0 0 0% 0)",
+      duration: 1.8,
+      ease: "power4.out"
+    }, 0.4);
+
+    // Add idle sway to the scroll card after unrolling
+    heroTl.to(".hanging-scroll", {
+      rotation: "0.3deg",
+      duration: 4.0,
+      repeat: -1,
+      yoyo: true,
+      ease: "sine.inOut"
+    });
+
+    // Draw Enso Circle
+    heroTl.fromTo(".enso-circle",
+      { opacity: 0, rotation: -130 },
+      { opacity: 0.9, rotation: -18, duration: 1.5, ease: "power2.out" },
+      0.7
+    );
+
+    // Hanko stamp down (elastic slide in)
+    heroTl.fromTo(".hanko-seal",
+      { opacity: 0, scale: 1.5, y: -20 },
+      { opacity: 1, scale: 1, y: 0, rotation: -12, duration: 1.0, ease: "back.out(1.5)" },
+      1.1
+    );
+
+    // 5. Section Scroll Reveal loop
+    document.querySelectorAll('section[data-reveal]').forEach((section) => {
+      const kanji = section.querySelector('span[style*="font-size: 64px"], span[style*="font-size: 280px"]');
+      const titleContainer = kanji ? kanji.nextElementSibling : null;
+      const contents = section.querySelectorAll('.skills-grid > *, .skill-card, .side-card, .exp-row, .hack-grid > *, .suimail-feats > *, .stat-grid > *, .btn-primary, .btn-ghost, p, h2, h3');
+
+      // Set initial states
+      // Kanji fades in like ink bleeding (heavy blur, small scale down)
+      if (kanji) gsap.set(kanji, { opacity: 0, filter: "blur(25px)", scale: 0.9, y: 10 });
+      if (titleContainer) gsap.set(titleContainer.children, { opacity: 0, x: 20, filter: "blur(2px)" });
+      if (contents.length > 0) gsap.set(contents, { opacity: 0, y: 20, filter: "blur(2px)" });
+
+      const revealTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: "top 85%",
+          toggleActions: "play none none none"
         }
+      });
 
-        // Close modal if user clicks outside of it
-        window.onclick = function(event) {
-            if (event.target == emailModal) {
-                closeModal();
-            }
+      // Reveal section wrapper
+      revealTl.to(section, { opacity: 1, duration: 0.2 });
+
+      if (kanji) {
+        revealTl.to(kanji, { opacity: 1, filter: "blur(0px)", scale: 1, y: 0, duration: 1.6, ease: "power3.out" });
+      }
+      if (titleContainer) {
+        revealTl.to(titleContainer.children, {
+          opacity: 1,
+          x: 0,
+          filter: "blur(0px)",
+          stagger: 0.1,
+          duration: 0.8,
+          ease: "power2.out",
+          onComplete: () => {
+            gsap.set(titleContainer.children, { clearProps: "all" });
+          }
+        }, "-=1.2");
+      }
+      if (contents.length > 0) {
+        revealTl.to(contents, {
+          opacity: 1,
+          y: 0,
+          filter: "blur(0px)",
+          stagger: 0.05,
+          duration: 0.9,
+          ease: "power2.out",
+          onComplete: () => {
+            contents.forEach(el => gsap.set(el, { clearProps: "transform,filter" }));
+          }
+        }, "-=0.8");
+      }
+    });
+
+    // Special scale effect for background kanji on contact page
+    const voidKanji = document.querySelector('#void span[style*="font-size: 280px"]');
+    if (voidKanji) {
+      gsap.fromTo(voidKanji,
+        { scale: 0.9, opacity: 0, filter: "blur(10px)" },
+        {
+          scrollTrigger: {
+            trigger: "#void",
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true
+          },
+          scale: 1.05,
+          opacity: 0.05,
+          filter: "blur(0px)",
+          ease: "none"
         }
+      );
+    }
+  }
 
-        // Fallback for Profile View image (if any other images are added later)
-        document.querySelectorAll('img[alt="Profile Views"]').forEach(img => {
-            img.onerror = function() {
-                this.alt = 'Profile view image failed to load.';
-                const p = document.createElement('p');
-                p.textContent = 'Profile view image could not be loaded.';
-                p.className = 'text-red-400 text-center text-xs';
-                if (this.parentNode) {
-                    this.parentNode.replaceChild(p, this);
-                }
-            };
-        });
-
-    </script>
+  // Execute immediately if DOM already parsed (to avoid missing DOMContentLoaded event)
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initAnimations);
+  } else {
+    initAnimations();
+  }
+</script>
 </body>
 </html>
